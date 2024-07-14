@@ -91,8 +91,8 @@ int main(void)
   MX_TIM3_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
-  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
+	HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin,SET);
 
   /* USER CODE END 2 */
 
@@ -101,16 +101,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-		//anjian
-		//{
-		//anjian1
-		//{tianqi}
-		//anjian2
-		//{erge}
-		//qita
-		//{yuyinshibie}
-		//}
-		
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
