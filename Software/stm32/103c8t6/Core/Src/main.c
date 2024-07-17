@@ -25,7 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "oled.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -92,7 +92,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-	HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin,SET);
+	oled_init();
 
   /* USER CODE END 2 */
 
@@ -101,8 +101,19 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+		
     /* USER CODE BEGIN 3 */
+		oled_show_string(0,0,"Test",2);
+		HAL_GPIO_TogglePin(LED_red_GPIO_Port,LED_red_Pin);
+
+		HAL_Delay(200);
+		HAL_GPIO_TogglePin(LED_white_GPIO_Port,LED_white_Pin);
+		HAL_Delay(200);
+
+		HAL_GPIO_TogglePin(LED_yellow_GPIO_Port,LED_yellow_Pin);
+		HAL_Delay(200);
+
+
   }
   /* USER CODE END 3 */
 }

@@ -33,3 +33,4 @@
 103c8t6\main.o: ../Core/Inc/tim.h
 103c8t6\main.o: ../Core/Inc/usart.h
 103c8t6\main.o: ../Core/Inc/gpio.h
+103c8t6\main.o: ..\User\OLED\oled.h
