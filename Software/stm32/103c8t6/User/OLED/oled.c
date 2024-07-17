@@ -1,7 +1,6 @@
 #include "oledfont.h"
 #include "oled.h"
 
-#define OLED_ADD 0x78 
 static void oled_cmd(uint8_t i2c_cmd)
 {
     uint8_t *cmd;
@@ -20,12 +19,12 @@ static void oled_data(uint8_t i2c_data)
 }
 static void oled_origin(uint8_t x, uint8_t y) 
 {
-    oled_cmd(0xb0+y);
+	oled_cmd(0xb0+y);
 	oled_cmd(((x&0xf0)>>4)|0x10);
 	oled_cmd((x&0x0f)|0x01);
 }
 
-void oled_clear()
+void oled_clear(void)
 {
 	uint8_t i,n;		    
 	for(i=0;i<8;i++)  

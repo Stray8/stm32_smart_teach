@@ -56,7 +56,11 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+char flag =0;
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+	HAL_GPIO_TogglePin(LED_red_GPIO_Port,LED_red_Pin);
+	flag = !flag;
+}
 /* USER CODE END 0 */
 
 /**
@@ -101,17 +105,17 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-		
+
     /* USER CODE BEGIN 3 */
 		oled_show_string(0,0,"Test",2);
-		HAL_GPIO_TogglePin(LED_red_GPIO_Port,LED_red_Pin);
+//		HAL_GPIO_TogglePin(LED_red_GPIO_Port,LED_red_Pin);
 
-		HAL_Delay(200);
-		HAL_GPIO_TogglePin(LED_white_GPIO_Port,LED_white_Pin);
-		HAL_Delay(200);
+//		HAL_Delay(200);
+//		HAL_GPIO_TogglePin(LED_white_GPIO_Port,LED_white_Pin);
+//		HAL_Delay(200);
 
-		HAL_GPIO_TogglePin(LED_yellow_GPIO_Port,LED_yellow_Pin);
-		HAL_Delay(200);
+//		HAL_GPIO_TogglePin(LED_yellow_GPIO_Port,LED_yellow_Pin);
+//		HAL_Delay(200);
 
 
   }
