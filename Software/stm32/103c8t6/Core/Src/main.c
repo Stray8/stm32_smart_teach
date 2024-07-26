@@ -26,6 +26,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "oled.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,15 +52,60 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
+int key_flag;
 
+uint8_t data[2];
+
+uint8_t RxBuff[1];      //进入中断接收数据的数组
+uint8_t DataBuff[5000]; //保存接收到的数据的数组
+int RxLine=0;           //接收到的数据长度
+uint8_t trans[2] = {1,2};
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-char flag =0;
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+	if(data[0] == '0'){
+		key_flag = 1; 
+	}
+	if(data[0] == '1'){
+		key_flag = 2; 
+	}
+	if(data[0] == '2'){
+		if(data[1] == '1'){
+		key_flag = 3; 
+		}
+		else if(data[1] == '2'){
+		key_flag = 4; 
+		}
+		else if(data[1] == '3'){
+		key_flag = 5; 
+		}
+	}
+	if(data[0] == '3'){
+		key_flag = 6; 
+	}
+	HAL_UART_Receive_IT(&huart1,(uint8_t*)&data,sizeof(data));//打开下一次串口接收中断
+}
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-	HAL_GPIO_TogglePin(LED_red_GPIO_Port,LED_red_Pin);
-	flag = !flag;
+	if(GPIO_Pin == Key_1_Pin){
+		key_flag = 1; 
+		HAL_UART_Transmit_IT(&huart1,"1",sizeof("1"));
+	}
+	else if(GPIO_Pin == Key_2_Pin){
+
+	}
+	else if(GPIO_Pin == Key_3_Pin){
+		HAL_UART_Transmit_IT(&huart1,"5",sizeof("5"));
+
+	}
+	else if(GPIO_Pin == Key_4_Pin){
+	}
+	else if(GPIO_Pin == TTP_223_Pin){
+		HAL_UART_Transmit_IT(&huart1,"2",sizeof("2"));
+	}
 }
 /* USER CODE END 0 */
 
@@ -97,6 +143,8 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 	oled_init();
+	HAL_UART_Receive_IT(&huart1,(uint8_t*)data,sizeof(data));//打开下一次串口接收中断
+
 
   /* USER CODE END 2 */
 
@@ -107,16 +155,50 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		oled_show_string(0,0,"Test",2);
-//		HAL_GPIO_TogglePin(LED_red_GPIO_Port,LED_red_Pin);
 
-//		HAL_Delay(200);
-//		HAL_GPIO_TogglePin(LED_white_GPIO_Port,LED_white_Pin);
-//		HAL_Delay(200);
+//		if(HAL_GPIO_ReadPin(TTP_223_GPIO_Port,TTP_223_Pin)){
+//			HAL_GPIO_WritePin(LED_red_GPIO_Port,LED_red_Pin,GPIO_PIN_RESET);
 
-//		HAL_GPIO_TogglePin(LED_yellow_GPIO_Port,LED_yellow_Pin);
-//		HAL_Delay(200);
+//		}
+//		else{
+//			HAL_GPIO_WritePin(LED_red_GPIO_Port,LED_red_Pin,GPIO_PIN_SET);
 
+//		}
+
+		switch(key_flag){
+			case 1:
+				oled_show_string(0,0,"mode 1",2);
+				break;
+			case 2:
+				oled_show_string(0,0,"mode 2",2);
+				break;
+			//white
+			case 3:
+				oled_show_string(0,0,"mode 3",2);
+				HAL_GPIO_WritePin(LED_yellow_GPIO_Port,LED_yellow_Pin,GPIO_PIN_RESET);
+				HAL_GPIO_WritePin(LED_white_GPIO_Port,LED_white_Pin,GPIO_PIN_SET);
+				break;
+			//yellow
+			case 4:
+				oled_show_string(0,0,"mode 3",2);
+				HAL_GPIO_WritePin(LED_yellow_GPIO_Port,LED_yellow_Pin,GPIO_PIN_SET);
+				HAL_GPIO_WritePin(LED_white_GPIO_Port,LED_white_Pin,GPIO_PIN_RESET);
+				break;
+			//shanshuo
+			case 5:
+				oled_show_string(0,0,"mode 3",2);
+				HAL_GPIO_WritePin(LED_yellow_GPIO_Port,LED_yellow_Pin,GPIO_PIN_SET);
+				HAL_GPIO_WritePin(LED_white_GPIO_Port,LED_white_Pin,GPIO_PIN_RESET);
+				HAL_Delay(400);
+				HAL_GPIO_WritePin(LED_yellow_GPIO_Port,LED_yellow_Pin,GPIO_PIN_RESET);
+				HAL_GPIO_WritePin(LED_white_GPIO_Port,LED_white_Pin,GPIO_PIN_SET);
+				HAL_Delay(400);
+				break;
+			case 6:
+				oled_show_string(0,0,"mode 4",2);
+				break;
+		}
+		oled_show_string(0,5,(char*)data,2);
 
   }
   /* USER CODE END 3 */

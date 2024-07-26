@@ -92,26 +92,24 @@ void oled_display_char(uint8_t x,uint8_t y,uint8_t chr,uint8_t Char_Size)
 	unsigned char c=0,i=0;	
 		c=chr-' ';//得到偏移后的值			
 		if(x>128-1){x=0;y=y+2;}
-		if(Char_Size == 16)
-			{
+		if(Char_Size == 16){
 			oled_origin(x,y);	
 			for(i=0;i<8;i++)
 			oled_data(F8X16[c*16+i]);
 			oled_origin(x,y+1);
 			for(i=0;i<8;i++)
 			oled_data(F8X16[c*16+i+8]);
-			}
-			else {	
-				oled_origin(x,y);
-				for(i=0;i<6;i++)
-				oled_data(F6x8[c][i]);
-				
-			}
+		}
+		else{	
+			oled_origin(x,y);
+			for(i=0;i<6;i++)
+			oled_data(F6x8[c][i]);
+		}
 }
 
 void oled_show_string(uint8_t x, uint8_t y, char ch[], uint8_t TextSize)
 {
-    uint8_t c = 0,i = 0,j = 0;
+	uint8_t c = 0,i = 0,j = 0;
 	switch(TextSize)
 	{
 		case 1:
